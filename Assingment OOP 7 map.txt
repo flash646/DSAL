@@ -1,0 +1,40 @@
+#include<iostream>
+#include<map>
+#include<string>
+using namespace std;
+
+int main(){
+    typedef map<string,int> maptype;
+    maptype populationMap;
+    populationMap.insert(pair<string,int>("Maharashtra",123456));
+    populationMap.insert(pair<string,int>("Goa",345567));
+    populationMap.insert(pair<string,int>("CG",5675589));
+    populationMap.insert(pair<string,int>("HP",54355217));
+    populationMap.insert(pair<string,int>("UP",9558765));
+    populationMap.insert(pair<string,int>("MP",8765554));
+    populationMap.insert(pair<string,int>("Assam",9876565));
+
+    maptype::iterator iter;
+
+    cout<<"\n------------- Population Map ------------------"<<endl;
+    cout<<"\nPopulation Map of "<<populationMap.size()<<endl;
+
+    string state_name;
+    char c;
+    do{
+        cout<<"\nEnter State's Name : ";
+        cin>>state_name;
+        iter = populationMap.find(state_name);
+        if(iter != populationMap.end()){
+            cout<<"Population of "<<state_name<<" is "<<iter->second<<endl;
+        }
+        else
+            cout<<"\nInvalid Choice Entered !!! ";
+
+        cout<<"\nDo You Want to Continue (y/n) : ";
+        cin>>c;
+    }while(c=='y');
+
+    return 0;
+
+}

@@ -1,0 +1,100 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+class publication{
+    int price;
+    string title;
+public:
+    void getdata(){
+        cout<<"\nEnter Title - ";
+        cin>>title;
+        cout<<"Enter Price - ";
+        cin>>price;
+    }
+
+    void setdata(){
+        cout<<"\nTitle is - "<<title<<endl;
+        cout<<"Price is - "<<price<<endl;
+    }
+};
+
+class book : public publication{
+    int pages;
+public:
+    void input(){
+        getdata();
+        while (true){
+            try{
+                cout<<"Enter No. of Pages of Book - ";
+                cin>>pages;
+                if(pages<=0){
+                    throw "Pages can't be Zero !! Renter the No. of Pages ";
+                }
+                break;
+            }
+            catch(const char* msg){
+                cout<<"\nError : "<<msg<<"\n"<<endl;
+            }
+        }
+    }
+
+    void display(){
+        setdata();
+        cout<<"No of Pages of Books are - "<<pages<<endl;
+    }
+};
+
+class CD : public publication{
+    int time;
+public:
+    void input(){
+        getdata();
+        cout<<"Enter the Play Time of CD - ";
+        cin>>time;
+    }
+
+    void display(){
+        setdata();
+        cout<<"Play Time of CD is - "<<time<<" minutes"<<endl;
+    }
+};
+
+int main(){
+
+    book b1;
+    CD c1;
+    int ch;
+
+    do {
+        cout<<"\n1.Enter Details of Book "<<endl;
+        cout<<"2.Enter Details of CD "<<endl;
+        cout<<"3.Exit "<<endl;
+
+        cout<<"\nEnter Your Choice from Above - ";
+        cin>>ch;
+
+        switch (ch)
+        {
+        case 1:
+            b1.input();
+            b1.display();
+            break;
+
+        case 2:
+            c1.input();
+            c1.display();
+            break;
+
+        case 3:
+            cout<<"\nProgram Endded "<<endl;
+            break;
+
+        default:
+            cout<<"\nInvalid Choice "<<endl;
+            break;
+        }
+    }while(ch!=3);
+
+    return 0;
+}
