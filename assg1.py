@@ -1,4 +1,4 @@
-# Program 1 
+# Program 1 ( linear Probing and Double Hashing )
 
 class Record:
     def __init__(self):
