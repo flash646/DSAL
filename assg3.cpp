@@ -5,10 +5,10 @@ using namespace std;
 struct Node {
     string label;
     int childCount;
-    Node* children[10];
+    Node* children[10];    //array of 10 pointers to other Node objects.Each node can have up to 10 children.
 };
 
-Node* root = nullptr;
+Node* root = nullptr;  // nullptr means it doesn't point to anything yet — the tree is empty initially.
 
 class BookTree {
 public:
