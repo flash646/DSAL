@@ -53,7 +53,7 @@ class HashTable:
 
     def display(self):
         print("\nHash Table:")
-        for i, record in enumerate(self.table):
+        for i, record in enumerate(self.table):    #enumerate(): Built-in function that returns both the index and value from a list.
             print(f"Index {i}: {record}")
         print(f"Total records: {self.count}")
 
