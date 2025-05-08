@@ -1,154 +1,131 @@
-# Program 1 ( linear Probing and Double Hashing )
-
 class Record:
-    def __init__(self):
-        self.name = None
-        self.number = None
-
-    def set_data(self, name, number):
+    def __init__(self, name="", number=0):
         self.name = name
         self.number = number
 
-    def __str__(self):
-        return f"Name: {self.name}\t\tNumber: {self.number}"
+    def __str__(self): #special method in Python used to define a string representation
+        return f"Name: {self.name}\tNumber: {self.number}"
 
 
 class HashTable:
     def __init__(self, size):
         self.size = size
         self.table = [None] * size
-        self.element_count = 0
+        self.count = 0
 
     def is_full(self):
-        return self.element_count == self.size
+        return self.count == self.size
 
     def hash_function(self, key):
         return key % self.size
 
+    # ---------- LINEAR PROBING INSERT FUNCTION ----------
     def insert(self, record):
         if self.is_full():
-            print("Hash Table Full")
+            print("Hash Table is full!")
             return
 
         pos = self.hash_function(record.number)
+        start = pos
 
-        if self.table[pos] is None:
-            self.table[pos] = record
-            print(f"Phone number of {record.name} is at position {pos}")
-        else:
-            print(f"Collision for {record.name}'s number at position {pos}, finding new position.")
-            start = pos
-            while self.table[pos] is not None:
-                pos = (pos + 1) % self.size
-                if pos == start:
-                    print("No empty slot found")
-                    return
-            self.table[pos] = record
-            print(f"Phone number of {record.name} is at position {pos}")
+        # Check for collision
+        if self.table[pos] is not None:
+            print("Collision occurred")
 
-        self.element_count += 1
-
-    def search(self, record):
-        pos = self.hash_function(record.number)
-        comparisons = 1
-
+        # Linear Probing starts here
         while self.table[pos] is not None:
-            if self.table[pos].name == record.name and self.table[pos].number == record.number:
-                print(f"Phone number found at position {pos}, comparisons: {comparisons}")
-                return pos
             pos = (pos + 1) % self.size
-            comparisons += 1
-            if comparisons > self.size:
-                break
+            if pos == start:
+                print("No empty slot found!")
+                return
 
-        print("Record not found")
+        self.table[pos] = record
+        self.count += 1
+        print(f"{record.name}'s number inserted at position {pos}")
+
+    def search(self, name):
+        for i in range(self.size):
+            if self.table[i] and self.table[i].name == name:
+                print(f"Found at position {i}")
+                return i
+        print("Record not found.")
         return None
 
     def display(self):
         print("\nHash Table:")
         for i, record in enumerate(self.table):
-            print(f"Hash Value: {i}\t\t{record}")
-        print(f"Total records: {self.element_count}")
+            print(f"Index {i}: {record}")
+        print(f"Total records: {self.count}")
 
 
 class DoubleHashTable(HashTable):
-    def h2(self, key):
+    def second_hash(self, key):
         return 5 - (key % 5)
 
+    # ---------- DOUBLE HASHING INSERT FUNCTION ----------
     def insert(self, record):
         if self.is_full():
-            print("Hash Table Full")
+            print("Hash Table is full!")
             return
 
         pos = self.hash_function(record.number)
 
+        if self.table[pos] is not None:
+            print("Collision occurred")
+
         if self.table[pos] is None:
             self.table[pos] = record
-            print(f"Phone number of {record.name} is at position {pos}")
+            print(f"{record.name}'s number inserted at position {pos}")
         else:
-            print(f"Collision for {record.name}'s number at position {pos}, finding new position.")
-            i = 1
-            while i <= self.size:
-                new_pos = (pos + i * self.h2(record.number)) % self.size
+            step = self.second_hash(record.number)
+            for i in range(1, self.size + 1):
+                new_pos = (pos + i * step) % self.size
                 if self.table[new_pos] is None:
                     self.table[new_pos] = record
-                    print(f"Phone number of {record.name} is at position {new_pos}")
+                    print(f"{record.name}'s number inserted at position {new_pos}")
                     break
-                i += 1
 
-        self.element_count += 1
+        self.count += 1
 
-    def search(self, record):
-        pos = self.hash_function(record.number)
-        comparisons = 1
-
-        if self.table[pos] and self.table[pos].name == record.name:
-            print(f"Phone number found at position {pos}, comparisons: {comparisons}")
-            return pos
-
-        i = 1
-        while i <= self.size:
-            new_pos = (pos + i * self.h2(record.number)) % self.size
-            comparisons += 1
-            if self.table[new_pos] and self.table[new_pos].name == record.name:
-                print(f"Phone number found at position {new_pos}, comparisons: {comparisons}")
-                return new_pos
-            i += 1
-
-        print("Record not found")
+    def search(self, name):
+        for i in range(self.size):
+            if self.table[i] and self.table[i].name == name:
+                print(f"Found at position {i}")
+                return i
+        print("Record not found.")
         return None
 
 
-def input_record():
-    r = Record()
+def get_record():
     name = input("Enter Name: ")
     number = int(input("Enter Number: "))
-    r.set_data(name, number)
-    return r
+    return Record(name, number)
 
 
 def main():
     while True:
         print("\n1. Linear Probing\n2. Double Hashing\n3. Exit")
-        choice = int(input("Enter choice: "))
+        choice = int(input("Choose: "))
 
         if choice == 3:
             break
 
-        size = int(input("Enter size of the hash table: "))
-        ht = HashTable(size) if choice == 1 else DoubleHashTable(size)
+        size = int(input("Enter table size: "))
+        table = HashTable(size) if choice == 1 else DoubleHashTable(size)
 
         while True:
-            print("\n1. Insert\n2. Search\n3. Display\n4. Back")
-            op = int(input("Enter choice: "))
+            print("\n1. Insert\n2. Search by Name\n3. Display\n4. Back")
+            op = int(input("Choose: "))
+
             if op == 4:
                 break
             elif op == 1:
-                ht.insert(input_record())
+                table.insert(get_record())
             elif op == 2:
-                ht.search(input_record())
+                name = input("Enter Name to search: ")
+                table.search(name)
             elif op == 3:
-                ht.display()
+                table.display()
 
 
 if __name__ == "__main__":
